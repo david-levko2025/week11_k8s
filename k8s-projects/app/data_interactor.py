@@ -3,13 +3,17 @@ from pymongo.errors import ConnectionFailure
 from typing import List, Dict, Optional
 from bson import ObjectId
 from contact import Contact
+from dotenv import load_dotenv
+import os
 
 
 class Interactor:
+    load_dotenv()
+    host = os.getenv("MONGO_HOST")
     def get_database():
         try:
             client = MongoClient(
-                "mongodb://localhost:27017/", serverSelectionTimeoutMS=5000
+                f"mongodb://{Interactor.host}:27017/", serverSelectionTimeoutMS=5000
             )
             client.admin.command("ping")
             print("✓ Successfully connected to MongoDB!")
