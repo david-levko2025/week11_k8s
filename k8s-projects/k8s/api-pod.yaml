@@ -7,8 +7,8 @@ metadata:
 spec:
   containers:
     - name: api
-      image: davidlevko2025/contacts-api:v1
-      image pull policy: Always
+      image: davidlevko2025/fast-api-server:0.0.1
+      imagePullPolicy: Always
       ports:
       - containerPort: 8000
       env:
