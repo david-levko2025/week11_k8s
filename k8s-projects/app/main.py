@@ -4,6 +4,7 @@ from data_interactor import Interactor
 import uvicorn
 from contact import Contact
 
+
 app = FastAPI()
 
 
@@ -15,17 +16,16 @@ def get_all_collection() -> list[Contact]:
 @app.post("/contacts")
 def create_new_contact(contact: Contact) -> dict:
     new = contact.model_dump()
-    print(new)
     new_contact = Interactor.create_contact(new)
     return new_contact
 
 @app.put("/contacts/{id}")
-def update_existing_contact(id:int,contact:Contact) -> dict:
+def update_existing_contact(id,contact:Contact) -> dict:
     update_contact_ = Interactor.update_contact(id, contact)
     return update_contact_
     
 @app.delete("/contacts/{id}")
-def delete_contact() -> dict:
+def delete_contact(id) -> dict:
     delete_info = Interactor.delete_contact(id)
     return delete_info
 

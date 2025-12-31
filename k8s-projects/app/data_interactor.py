@@ -2,6 +2,8 @@ from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
 from typing import List, Dict, Optional
 from bson import ObjectId
+from contact import Contact
+
 
 class Interactor:
     def get_database():
@@ -26,7 +28,8 @@ class Interactor:
 
     @staticmethod
     def create_contact(contact_data: dict) -> str:
-        result = Interactor.contact_collection.insert_one(contact_data)
+        conn = Interactor.contact_collection
+        result = conn.insert_one(contact_data)
         return {
         "message": "contact created successfully",
         "id": str(result.inserted_id)
@@ -38,14 +41,13 @@ class Interactor:
         return result
     
     @staticmethod
-    def update_contact(id: str, contact_data: dict) -> str:
+    def update_contact(id: str, contact_data: Contact) -> str:
+        contact_data = contact_data.model_dump()
         result = Interactor.contact_collection.update_one({"_id":ObjectId(id)},
-                                                          {"$set":{"first_name":contact_data["first_name"],
-                                                           "last_name":contact_data["last_name"],
-                                                           "phone_number":contact_data["phone_number"]}})
+                                                          {"$set":{**contact_data}})
         return {
         "message": "contact updated successfully",
-        "id": str(result.upserted_id)
+        "id": id
     }
 
     @staticmethod
@@ -53,5 +55,5 @@ class Interactor:
         result = Interactor.contact_collection.delete_one({"_id":ObjectId(id)})
         return {
         "message": "contact deleted successfully",
-        "id": str(result.deleted_count)
+        "id": id
     }
